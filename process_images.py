@@ -32,11 +32,13 @@ def image_resize(img: Image.Image, resize_to: int | None):
 def process_image(source_path: Path, target_dir: Path, config: Config):
     for name, size in config.target_sizes.items():
         img = image_resize(Image.open(source_path), size)
-        size_dir = os.path.join(target_dir, name)
+
+        filename = os.path.splitext(os.path.basename(source_path))[0]
+        size_dir = os.path.join(target_dir, filename)
         os.makedirs(size_dir, exist_ok=True)
+
         for ext in config.target_extensions:
-            filename = os.path.splitext(os.path.basename(source_path))[0] + f".{ext}"
-            img.save(os.path.join(size_dir, filename))
+            img.save(os.path.join(size_dir, f"{name}.{ext}"))
 
 
 def process_dir(current_dir: Path, target_dir: Path, config: Config | None):
