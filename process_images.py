@@ -41,6 +41,14 @@ def resize_image(image, min_size):
     return image.resize(new_size, Image.Resampling.LANCZOS)
 
 
+def copy_cname(target_dir):
+    with open("CNAME") as f:
+        domain = f.read().strip()
+
+    with open(os.path.join(target_dir, "CNAME"), "w") as f:
+        f.write(domain)
+
+
 if __name__ == "__main__":
     import argparse
 
@@ -51,4 +59,6 @@ if __name__ == "__main__":
     parser.add_argument("target_dir", help="Directory to store the processed images.")
 
     args = parser.parse_args()
+
+    copy_cname(args.target_dir)
     process_images(args.source_dir, args.target_dir)
