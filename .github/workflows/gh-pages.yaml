@@ -23,10 +23,13 @@ jobs:
 
       - name: Process images
         run: |
-          python process_images.py ./data ./processed-images
+          python process_images.py ./data ./gh-pages
+
+      - name: Copy CNAME file
+        run: cp CNAME ./gh-pages/CNAME
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./processed-images
+          publish_dir: ./gh-pages
