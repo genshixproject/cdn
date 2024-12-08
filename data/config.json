@@ -1,0 +1,12 @@
+{
+    "target_sizes": {
+        "emoji": 100,
+        "small": 128,
+        "middle": 512,
+        "big": null
+    },
+    "target_extensions": [
+        "png",
+        "webp"
+    ]
+}
