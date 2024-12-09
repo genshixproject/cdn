@@ -1,6 +1,6 @@
 {
     "target_sizes": {
-        "big": null
+        "source": null
     },
     "target_extensions": [
         "png",
