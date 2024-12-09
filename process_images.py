@@ -8,7 +8,7 @@ from PIL import Image
 
 Path = str | os.PathLike[str]
 KNOWN_IMAGES_EXT = ["png", "webp"]
-KNOWN_OTHER_FILES = ["mp4"]
+KNOWN_OTHER_EXT = ["mp4"]
 
 
 @dataclass
@@ -62,9 +62,9 @@ def process_dir(current_dir: Path, target_dir: Path, config: Config | None):
             process_dir(file, os.path.join(target_dir, d), config_current)
 
         ext = os.path.splitext(file)[1].strip(".")
-        if ext in KNOWN_FILES_EXT:
+        if ext in KNOWN_IMAGES_EXT:
             process_image(file, target_dir, config_current)
-        elif ext in KNOWN_OTHER_FILES:
+        elif ext in KNOWN_OTHER_EXT:
             process_file(file, target_dir, config_current)
 
 
