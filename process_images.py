@@ -5,7 +5,7 @@ from PIL import Image
 
 
 Path = str | os.PathLike[str]
-KNOWN_FILES_EXT = ["png", "webp"]
+KNOWN_FILES_EXT = ["png", "webp", "mp4"]
 
 
 @dataclass
