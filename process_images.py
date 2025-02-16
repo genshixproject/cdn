@@ -7,7 +7,7 @@ from PIL import Image
 
 
 Path = str | os.PathLike[str]
-KNOWN_IMAGES_EXT = ["png", "webp"]
+KNOWN_IMAGES_EXT = {"png": "RGBA", "webp": "RGBA", "jpg": "RGB"}
 KNOWN_OTHER_EXT = ["mp4"]
 
 
@@ -29,7 +29,7 @@ def image_resize(img: Image.Image, resize_to: int | None):
         return img
 
     r_coef = (min if resize_to > 0 else max)(img.size) / abs(resize_to)
-    return img.resize(map(int, (img.size[0] / r_coef, img.size[1] / r_coef)))
+    return img.resize(list(map(int, (img.size[0] / r_coef, img.size[1] / r_coef))))
 
 
 def process_image(source_path: Path, target_dir: Path, config: Config):
@@ -41,7 +41,8 @@ def process_image(source_path: Path, target_dir: Path, config: Config):
         os.makedirs(size_dir, exist_ok=True)
 
         for ext in config.target_extensions:
-            img.save(os.path.join(size_dir, f"{name}.{ext}"))
+            img_mode = KNOWN_IMAGES_EXT[ext]
+            img.convert(img_mode).save(os.path.join(size_dir, f"{name}.{ext}"))
 
 
 def process_file(source_path: Path, target_dir: Path, config: Config):
@@ -60,12 +61,18 @@ def process_dir(current_dir: Path, target_dir: Path, config: Config | None):
         file = os.path.join(current_dir, d)
         if os.path.isdir(file):
             process_dir(file, os.path.join(target_dir, d), config_current)
+            continue
 
+        print("Processing", file)
         ext = os.path.splitext(file)[1].strip(".")
-        if ext in KNOWN_IMAGES_EXT:
+        if ext == "json":
+            continue
+        elif ext in KNOWN_IMAGES_EXT:
             process_image(file, target_dir, config_current)
         elif ext in KNOWN_OTHER_EXT:
             process_file(file, target_dir, config_current)
+        else:
+            raise ValueError(f"Unknown file type: {file}")
 
 
 if __name__ == "__main__":
