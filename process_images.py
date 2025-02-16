@@ -1,11 +1,14 @@
 from dataclasses import dataclass
 import os
 import json
+import shutil
+
 from PIL import Image
 
 
 Path = str | os.PathLike[str]
-KNOWN_FILES_EXT = ["png", "webp"]
+KNOWN_IMAGES_EXT = ["png", "webp"]
+KNOWN_OTHER_EXT = ["mp4"]
 
 
 @dataclass
@@ -41,6 +44,13 @@ def process_image(source_path: Path, target_dir: Path, config: Config):
             img.save(os.path.join(size_dir, f"{name}.{ext}"))
 
 
+def process_file(source_path: Path, target_dir: Path, config: Config):
+    filename = os.path.splitext(os.path.basename(source_path))[0]
+    size_dir = os.path.join(target_dir, filename)
+    os.makedirs(size_dir, exist_ok=True)
+    shutil.copy(source_path, target_dir)
+
+
 def process_dir(current_dir: Path, target_dir: Path, config: Config | None):
     config_current = load_config(os.path.join(current_dir, "config.json")) or config
     if config_current is None:
@@ -50,8 +60,12 @@ def process_dir(current_dir: Path, target_dir: Path, config: Config | None):
         file = os.path.join(current_dir, d)
         if os.path.isdir(file):
             process_dir(file, os.path.join(target_dir, d), config_current)
-        elif os.path.splitext(file)[1].strip(".") in KNOWN_FILES_EXT:
+
+        ext = os.path.splitext(file)[1].strip(".")
+        if ext in KNOWN_IMAGES_EXT:
             process_image(file, target_dir, config_current)
+        elif ext in KNOWN_OTHER_EXT:
+            process_file(file, target_dir, config_current)
 
 
 if __name__ == "__main__":
