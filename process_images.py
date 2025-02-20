@@ -41,8 +41,12 @@ def process_image(source_path: Path, target_dir: Path, config: Config):
         os.makedirs(size_dir, exist_ok=True)
 
         for ext in config.target_extensions:
-            img_mode = KNOWN_IMAGES_EXT[ext]
-            img.convert(img_mode).save(os.path.join(size_dir, f"{name}.{ext}"))
+            result_file = os.path.join(size_dir, f"{name}.{ext}")
+            if str(source_path).split(".")[-1] == ext:
+                shutil.copy(source_path, result_file)
+            else:
+                img_mode = KNOWN_IMAGES_EXT[ext]
+                img.convert(img_mode).save(result_file)
 
 
 def process_file(source_path: Path, target_dir: Path, config: Config):
