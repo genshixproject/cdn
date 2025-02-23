@@ -8,7 +8,7 @@ from PIL import Image
 
 Path = str | os.PathLike[str]
 KNOWN_IMAGES_EXT = {"png": "RGBA", "webp": "RGBA", "jpg": "RGB"}
-KNOWN_OTHER_EXT = ["mp4"]
+KNOWN_OTHER_EXT = ["mp4", "webp"]
 
 
 @dataclass
