@@ -1,6 +1,6 @@
 {
     "target_sizes": {
-        "source": null
+        "img": null
     },
     "target_extensions": [
         "webm"
